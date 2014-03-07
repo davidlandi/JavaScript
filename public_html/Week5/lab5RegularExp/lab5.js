@@ -9,16 +9,15 @@ function submitForm(){
    var lastName = document.getElementById("Lname");
    var emailAddress = document.getElementById("email");
    var userComments = document.getElementById("comments");
-   var fnameValidateMessage = document.getElementById("fnDtU1");
+   var userCommentsMessage = document.getElementById("userInput");
    var fnameErrorMessage = document.getElementById("fnDtU2");
-   var lnameValidateMessage = document.getElementById("lnDtU1");
    var lnameErrorMessage = document.getElementById("lnDtU2");
-   var emailValidateMessage = document.getElementById("eDtU1");
    var emailErrorMessage = document.getElementById("eDtU2");
    var t1,t2,t3,t4;
+   
    if (!firstName.value.length){
        firstName.className="bad";
-       fnameValidateMessage.innerHTML = "<strong>!!Invalid Entry!!</strong>";
+       fnameErrorMessage.innerHTML = "<strong>!!Invalid Entry!!</strong>";
        fnameErrorMessage.className="error";
        t1 = false;
        console.log("error FirstName");
@@ -26,7 +25,7 @@ function submitForm(){
    
    else if (noSpaceAlphaValidate( firstName.value ) == false){
        firstName.className="bad";
-       fnameValidateMessage.innerHTML = "<strong>!!Invalid Entry!!</strong>";
+       fnameErrorMessage.innerHTML = "<strong>!!Invalid Entry!!</strong>";
        fnameErrorMessage.className="error";
        t1 = false;
        console.log("error FirstName");
@@ -34,55 +33,69 @@ function submitForm(){
    
    else{
       firstName.className="good";
-      fnameValidateMessage.innerHTML="<strong>Valid</strong>";
+      fnameErrorMessage.innerHTML="<strong>Valid</strong>";
       fnameErrorMessage.className="valid";
+      t1 = true;
       console.log( firstName.value );
       console.log(noSpaceAlphaValidate( firstName.value ));
 }   
    
    if(!lastName.value.length ||SpaceAlphaValidate(lastName.value)== false){
        lastName.className="bad";
-       lnameValidateMessage.innerHTML = "<strong>!!Invalid Entry!!</strong>";
+       lnameErrorMessage.innerHTML = "<strong>!!Invalid Entry!!</strong>";
        lnameErrorMessage.className="error";
        t2 = false;
        console.log("Error LastName");
    }
    else{
       lastName.className="good";
-      lnameValidateMessage.innerHTML="<strong>Valid</strong>";
+      lnameErrorMessage.innerHTML="<strong>Valid</strong>";
       lnameErrorMessage.className="valid";
+      t2 = true;
       console.log("valid LastName");
    }
    if(EmailValidate(emailAddress.value) == false){
        emailAddress.className="bad";
-       emailValidateMessage.innerHTML = "<strong>!!Invalid Entry!!</strong>";
+       emailErrorMessage.innerHTML = "<strong>!!Invalid Entry!!</strong>";
        emailErrorMessage.className="error";
        t3 = false;
        console.log("Error Email");
    }
    else{
        emailAddress.className="good";
-       emailValidateMessage.innerHTML="<strong>Valid</strong>";
-       emailErrorMessage.className="Vaild";
+       emailErrorMessage.innerHTML="<strong>Valid</strong>";
+       emailErrorMessage.className="valid";
+       t3 = true;
        console.log("Valid Email");
    }
    if(userComments.value.replace(/[\s\r\n]/g,"")===""){
+       userComments.className = "bad";
+       userCommentsMessage.innerHTML = "<strong>Why not add some comments?</strong>";
+       userCommentsMessage.className = "error";
        console.log("comment field is empty");
        t4 = false;
        alert("Please Enter Comments");
    }
-   else if (userComments.value.replace(strip_HTML)){
-       
-       t4 = false;
+   else if (strip_HTML(userComments.value)== false){
+       userComments.className = "bad";
+       userCommentsMessage.innerHTML = "<strong>Get your HTML out of here!!!</strong>";
+       userCommentsMessage.className = "error";
        alert("!!!HTML CODE NOT ALLOWED!!!");
-       strip_HTML("");
-       
+       userComments.value = strip_HTML(userComments.value);
+       t4 = false;
    }
-   else if (t1 == false||t2 == false||t3 == false||t4 == false){
-       alert("Error Please Review All Fields");
+   else{
+       userComments.className = "good";
+       userCommentsMessage.innerHTML = "<strong>Valid</strong>";
+       userCommentsMessage.className = "valid";
+       t4 = true;
+   }
+   
+   if (t1 == false||t2 == false||t3 == false||t4 == false){
+       alert(" You have made a mistake. Now go back and try again");
    }
    else 
-       alert( "Thank you "+ firstName.value+" "+lastName.value);
+       alert( "Thank you "+ firstName.value+" "+lastName.value+" "+"for not messing this up.");
    }
 function noSpaceAlphaValidate(str){
     var alphaRegex = /^[A-z]{1,}$/;
