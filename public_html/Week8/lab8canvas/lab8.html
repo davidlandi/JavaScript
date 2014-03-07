@@ -6,11 +6,36 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>Lab 8</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
     </head>
     <body>
-        <div>TODO write content</div>
+        <div id="time"></div>
+        <h1 id="counter"></h1>
+        <script type="text/javascript">
+            window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                              window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+               var h1 = document.getElementById('counter');
+            var count = 1000;
+            
+            var time = new Date();
+            
+          requestAnimationFrame(updateTime);
+            
+            function updateTime() {
+                  
+                if ( count % 100 == 0 )
+                    h1.innerHTML = count;
+                count--;
+                
+                if ( count >= 0) {
+                  requestAnimationFrame(updateTime);
+                }
+                
+            }
+            
+            
+            </script>
     </body>
 </html>
