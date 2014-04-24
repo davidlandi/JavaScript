@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!--
+Developed by David Landi 2014
+example of static webapp that uses html5 local storage and javascript
+to store and send contact info in csv format via email 
+-->
+<html>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <style type="text/css">
+            #main{
+                height:auto;
+                border: 1px solid black;
+                width:768px;
+                margin: 1em auto;
+				background-color:#005189;
+                padding: 0.5em;
+				
+            }
+            .scrollBox{
+                border: 1px solid #999999;
+                margin-top: 0.5em;
+                margin-bottom: 1em;
+                padding-left: 0.5em;
+                background-color: #EFEFEF;
+                height: 200px;
+                overflow: auto;
+            }
+            #mainform{
+                min-height:579px;
+                max-height: 900px;
+                border: 1px solid black;
+                width:500px;
+                margin: 1em auto;
+                padding: 0.5em;
+                background-color:white;
+                text-align: left;
+            }
+            input[type=text]{
+                border: 1px solid lightblue;
+                margin-right:90px;
+                float:right;
+            }
+            input[type=text]:hover{
+                background-color: #e9f6fd;
+            }
+            label{
+                font-weight:bold;
+                font-size: 128%;
+            }
+            dataManagment{
+                float: right;
+                margin-right: 160px;
+                height: auto;
+                width: 900px;
+            }
+            logo{
+                width:200px;
+                height:200px;
+                border: 1px solid black;
+                
+            }
+			
+        </style>
+    </head>
+    <body>
+        
+        <div id="main">
+        <form name="mainform" id="mainform" action="">
+		<img src="images/collette.png" alt="logo">
+            
+                <fieldset>
+                    <legend>Contact Information</legend>
+                    <label for="name">Name:</label>
+                    <input id="name" name="fname" type="text" size="40"  placeholder="First Name" /><br/>
+  
+                    <label for="company">Company:</label>
+                    <input id="company" name="company" type="text" size="40"  placeholder="Company Name" /><br/>
+                    <label for="bdate">Birth Date:</label>
+                    <input id="bdate" name="bdate" type="text" size="40" placeholder="mm/dd/yyyy" /><br/>
+                    <label for="address">Address:</label>
+                    <input id="address" name="address" type="text" size="40"/><br/>
+                    <label for="city">City:</label>
+                    <input id="city" name="city" type="text" size="40"/><br/>
+                    <label for="state">State:</label>
+                    <input id="state" name="state" type="text" size="40"/><br/>
+                    <label for="zip">Zip:</label>
+                    <input id="zip" name="zip" type="text" size="40"/><br/>
+                    <label for="email">Email:</label>
+                    <input id="email" name="email" type="text" size="40" placeholder="email@gocollette.com"/><br/>
+                    <label for="phone">Phone:</label>
+                    <input id="phone" name="phone" type="text" size="40" placeholder="(###)###-####"/><br/>
+                </fieldset>
+                <fieldset>
+                    <legend>Terms & Conditions</legend>
+                    <div id="termsScroll" class="scrollBox">
+                        <p>Entrant must be legal resident of the United States, 18 years of age or older. 
+                    With entry, entrant agrees to share mailing information and accept emails and mailings from Collette.
+                    Trip value based upon land tour for two, double occupancy, during high season. 
+                    Round trip airfare provided from Philadelphia, Newark, Kennedy or Dulles. 
+                    Substitute gateways may be utilized at a potential surcharge.
+                    Prize does not include costs for a passport, incidentals, personal items, 
+                    and meals that are not included in the trip itinerary, 
+                    and will be the responsibility of the winner.
+                    Entry must be completed in person at the Philadelphia Flower Show, 2/27/14 through 3/9/14. 
+                    Winner will be informed via mail by 4/30/14 and travel must be completed by 4/30/15.  
+                    The winner must have a valid passport with at least six months 
+                    validity at the time of travel.</p> 
+                    </div>
+                    <input type="button" button style=" background-color:#ff8400;" value="Submit Form" onclick="saveForm();"/>
+                </fieldset>
+                    <input id="password" name="pwd" type="password" placeholder="Employee Login"/>
+                    <input type="button" button style=" background-color:#ff8400;" value="Submit Key" onclick="loginKey();"/>
+                <div id="dataManagment" hidden="">
+                    
+                    <input type="button" button style=" background-color:#ff8400;" value="Access Stored Data" onclick="getDatainCSVFormat();"/>
+                    <a href="mailto:test@test.com?CC=test@test.com&Subject=how%20to%20send%20email%20from%20static%20html%20page&Body=this%20might%20work%20for%20you%21 
+                    <mailto:test@test.com.com?CC=test@test.com&Subject=how%20to%20send%20email%20from%20static%20html%20page&Body=this%20might%20work%20for%20you%21>"
+                    >Send Data</a>
+                    <input type="button" button style=" background-color:#ff8400;" value="Copy All" onclick="CopyAll();"/>
+                    <input type="button" button style=" background-color:#ff8400;" value="Clear All CSV Data" onclick="cleanLocalStorage();"/>
+                    <br/>
+                        <textarea id="results" cols="50" rows="8">
+                           
+                        </textarea>
+                    
+                </div>
+            
+        </form>
+            </div>
+        
+        <script type="text/javascript">
+         
+            function loginKey(){
+                console.log('clicked');
+                var key = document.getElementById('password');
+                var employeeArea = document.getElementById('dataManagment');
+               
+                if(key.value == "Test12"){
+                    employeeArea.hidden = false;
+                    console.log('working');
+                }
+                else{
+                    employeeArea.hidden = true;
+                    
+                    console.log('working2');
+                }
+                console.log(key.value);
+            }
+    function saveForm(){
+		var time = getCurrentTime(),
+		name = document.getElementById("name"),
+		bdate = document.getElementById("bdate"),
+		address = document.getElementById("address"),
+		city = document.getElementById("city"),
+		state = document.getElementById("state"),
+		zip = document.getElementById("zip"),
+		email = document.getElementById("email"),
+		phone = document.getElementById("phone");
+		console.log(time);
+		localStorage.setItem("name_"+time, name.value);
+		localStorage.setItem("bdate_"+time, bdate.value);
+		localStorage.setItem("address_"+time, address.value);
+		localStorage.setItem("city_"+time, city.value);
+		localStorage.setItem("state_"+time, state.value);
+		localStorage.setItem("zip_"+time, zip.value);
+		localStorage.setItem("email_"+time, email.value);
+		localStorage.setItem("phone_"+time, phone.value);
+		name.value = "";
+		bdate.value = "";
+		address.value = "";
+		city.value = "";
+		state.value = "";
+		zip.value = "";
+		email.value = "";
+		phone.value = "";
+       }
+       function getUID(){
+       return Math.random().toString(36).substr(2,9);    
+       }
+       function getCurrentTime(){
+       return new Date().getTime();   
+       }
+       function getStorageTimes(){
+       var times = [], time;
+       for (var x in localStorage){
+       time = Number(x.split("_")[1]);
+       if(times.indexOf(time) == -1)
+       times.push(Number(x.split("_")[1]));
+       }
+       return times;
+       }
+       function getDatainCSVFormat(){
+       var csvtxt = document.getElementById("results"),
+       times = getStorageTimes();
+       csvtxt.value = "Time,Name,Birth Date,Address,City,State,Zip,Email,Phone,\n";
+       for(var i = 0, l = times.length; i < l; i++){
+           csvtxt.value += new Date(times[i])+
+		","+localStorage.getItem("name_"+times[i])+
+		","+localStorage.getItem("bdate_"+times[i])+
+		","+localStorage.getItem("address_"+times[i])+
+		","+localStorage.getItem("city_"+times[i])+
+		","+localStorage.getItem("state_"+times[i])+
+		","+localStorage.getItem("zip_"+times[i])+
+		","+localStorage.getItem("email_"+times[i])+
+		","+localStorage.getItem("phone_"+times[i])+","+"\n";
+           
+       }
+       }
+       function cleanLocalStorage(){
+        var doClear = confirm("Are you sure you want to delete all store form data")
+	if(doClear === true){
+        localStorage.clear();   
+       }
+       }
+       function CopyAll(){
+       document.getElementById("results").select();    
+       }
+       
+            
+            
+        </script>
+    </body>
+</html>
